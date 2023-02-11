@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: webserver
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          state: 'managed'
+  template:
+    metadata:
+      name: 'webserver-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/michaelkotelnikov/sample-application.git
+        targetRevision: master
+        path: application-2-resources/
+      destination:
+        server: '{{server}}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
